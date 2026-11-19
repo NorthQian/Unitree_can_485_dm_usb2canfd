@@ -12,7 +12,7 @@
 用法：
     python3 test_motor.py                        # 模块 ID 3、电机 ID 0、通道 0
     python3 test_motor.py --module-id 2 --motor-id 1
-    python3 test_motor.py --bitrate 500000       # 模块拨码第 4 位拨到 ON 时是 500k
+    python3 test_motor.py --bitrate 1000000      # 通道配置不是 1M 时显式设为 1M
     python3 test_motor.py --move                 # 再做一次小幅动作测试
 """
 
@@ -197,7 +197,7 @@ def main() -> int:
         return 0
     print("\n没有收到任何上传帧。排查顺序：")
     print("  1. 模块拨码 ID（前两位）是否等于 --module-id；默认出厂是 3；")
-    print("  2. 模块拨码第 4 位：ON=500k、OFF=1M，与 --bitrate / 通道配置是否一致；")
+    print("  2. 模块拨码第 4 位：OFF=1M（当前为 1M），与 --bitrate / 通道配置是否一致；")
     print("  3. 电机 ID 是否等于 --motor-id；")
     print("  4. 总线是否 120Ω 终端、CAN_H/CAN_L 是否接反。")
     return 1
