@@ -30,10 +30,21 @@ USB2UART 透传、热插拔与日志订阅。
 
 ```
 Python/
-├── pack/     发布产物：dmcan_sdk-2.1.1-py3-none-any.whl / .tar.gz（另附 2.1.0、1.0.4 历史包）
-├── demo/     最小示例：demo.py + dlls/（后端库与依赖 DLL）
-└── README.md 本说明
+├── pack/           发布产物：dmcan_sdk-2.1.1-py3-none-any.whl / .tar.gz（另附 2.1.0、1.0.4 历史包）
+├── demo/           示例代码：demo.py + dlls/（后端库与依赖 DLL），以及电机专题脚本
+├── README.md       本说明（SDK 通用）
+├── README_M8010.md 专题：宇树 GO-M8010-6（CAN转485 模块）
+└── README_QZB.md   专题：泉智博电机（CAN FD MIT 协议）
 ```
+
+## 专题文档
+
+通用 SDK 用法看本文件；具体电机的接线、协议与调参看下面两篇：
+
+| 文档 | 适用硬件 | 内容 |
+| --- | --- | --- |
+| [README_M8010.md](README_M8010.md) | 宇树 GO-M8010-6 + CAN转485 模块 | 29 位扩展帧、模式 10~13、定点换算、`test_motor.py` / `sine_follow.py` |
+| [README_QZB.md](README_QZB.md) | 泉智博伺服关节（MIT 协议） | CAN FD 1M/5M 位定时、MIT 帧打包、槽位映射、`qzb_sine.py` |
 
 ## 安装
 
