@@ -23,7 +23,8 @@
 import argparse
 import time
 
-from qzb_canfd import configure_canfd, enable_termination, ENABLE_PATTERN
+from qzb_canfd import (DISABLE_PATTERN, ENABLE_PATTERN, configure_canfd,
+                       enable_termination)
 
 from dmcan import DmCanContext, dmcan_event_flag
 
@@ -56,6 +57,8 @@ def main() -> int:
                         help="数据域采样点（默认 0.7647，取自说明书）")
     parser.add_argument("--no-restore", action="store_true",
                         help="结束后不恢复通道原来的波特率配置")
+    parser.add_argument("--keep-enabled", action="store_true",
+                        help="发的是使能帧时，结束后不补发失能帧（默认补发，避免电机 CAN 超时锁存）")
     args = parser.parse_args()
 
     if args.id > 0x7FF:
@@ -112,6 +115,16 @@ def main() -> int:
                         time.sleep(args.period)
             except KeyboardInterrupt:
                 print("\n已中断")
+
+            # 只发使能帧时补发失能：电机使能后收不到 MIT 指令会进 CAN 超时保护（锁存，
+            # 必须断电重上电才能恢复），这里顺手把它关掉。
+            if not args.keep_enabled and args.id == CAN_ID:
+                for _ in range(5):
+                    device.send_can(args.channel, CAN_ID, DISABLE_PATTERN * 8,
+                                    canfd=True, ext=False, rtr=False, brs=True)
+                    time.sleep(0.02)
+                print("已补发失能帧。")
+
             time.sleep(0.3)
             error_sub.cancel()
             if bus_errors:

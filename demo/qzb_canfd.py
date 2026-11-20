@@ -246,6 +246,23 @@ def build_mit_frame(velocity_by_slot: dict, kd: float) -> bytes:
     return bytes(frame)
 
 
+def build_mit_frame_positions(positions_by_slot: dict, kp: float, kd: float,
+                              velocity: float = 0.0) -> bytes:
+    """
+    @brief 组 8 关节 MIT 帧（64 字节），给定槽位填位置指令，其余槽位留空。
+
+    @param positions_by_slot 槽位号 → 目标位置 rad
+    @param kp 所有受控槽位共用的比例增益
+    @param kd 所有受控槽位共用的微分增益
+    @param velocity 速度前馈 rad/s（位置模式一般给 0）
+    @return 64 字节
+    """
+    frame = bytearray(64)
+    for slot, position in positions_by_slot.items():
+        frame[slot * 8:(slot + 1) * 8] = pack_joint(position, velocity, kp, kd, 0.0)
+    return bytes(frame)
+
+
 def unpack_feedback(data: bytes) -> dict:
     """
     @brief 解析单个电机的 8 字节反馈帧。
